@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using CalendarAPI.Application.CommandSide.Commands.AddNewEvent;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,11 @@ namespace CalendarAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<int> AddNewEvent([FromBody] AddNewEventCommand command)
+        public async Task<ActionResult<int>> AddNewEvent([FromBody] AddNewEventCommand command)
         {
             var id = await _mediator.Send(command);
 
-            return id;
+            return Created($"calendar/{id}", id);
         }
     }
 }
