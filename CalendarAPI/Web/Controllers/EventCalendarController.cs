@@ -42,5 +42,20 @@ namespace CalendarAPI.Controllers
                 return NotFound(calendarEventId);
             }
         }
+        [HttpPut, Route("/{calendarEventId}")]
+        public async Task<ActionResult> EditCalendarEvent([FromRoute] int calendarEventId, [FromBody] EditCalendarEventCommand command)
+        {
+            try
+            {
+                command.Id = calendarEventId;
+                await _mediator.Send(command);
+
+                return Ok();
+            }
+            catch (ResourceNotFoundException)
+            {
+                return NotFound(calendarEventId);
+            }
+        }
     }
 }
