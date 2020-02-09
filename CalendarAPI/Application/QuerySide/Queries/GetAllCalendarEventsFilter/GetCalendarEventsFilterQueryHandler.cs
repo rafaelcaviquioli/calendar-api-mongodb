@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEventsFilter
 {
-    public class GetCalendarEventsFilterQueryHandler : IRequestHandler<GetCalendarEventsFilterQuery, CalendarEventViewModel[]>
+    public class
+        GetCalendarEventsFilterQueryHandler : IRequestHandler<GetCalendarEventsFilterQuery, CalendarEventViewModel[]>
     {
         private readonly CalendarContext _context;
 
@@ -22,7 +23,7 @@ namespace CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEventsFilter
             CancellationToken cancellationToken)
         {
             var calendarEvents = from ce in _context.CalendarEvents.AsNoTracking()
-                .Include(ce => ce.Members)
+                    .Include(ce => ce.Members)
                 select ce;
             var filters = request.CalendarEventFilter;
 
@@ -31,21 +32,24 @@ namespace CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEventsFilter
 
             if (filters.Id > 0)
                 calendarEvents = calendarEvents.Where(ce => ce.Id == filters.Id);
-            
+
             if (filters.Location != null)
                 calendarEvents = calendarEvents.Where(ce => ce.Location == filters.Location);
 
             if (filters.Name != null)
                 calendarEvents = calendarEvents.Where(ce => ce.Name == filters.Name);
-            
-            return await calendarEvents.Select(calendarEvent => new CalendarEventViewModel(
-                calendarEvent.Id,
-                calendarEvent.Name,
-                calendarEvent.Time,
-                calendarEvent.Location,
-                calendarEvent.Organizer,
-                calendarEvent.Members.Select(m => m.Name).ToArray()
-            )).ToArrayAsync(cancellationToken: cancellationToken);
+
+            return await calendarEvents.Select(calendarEvent =>
+                    new CalendarEventViewModel(
+                        calendarEvent.Id,
+                        calendarEvent.Name,
+                        calendarEvent.Time,
+                        calendarEvent.Location,
+                        calendarEvent.Organizer,
+                        calendarEvent.Members.Select(m => m.Name).ToArray()
+                    )
+                )
+                .ToArrayAsync(cancellationToken: cancellationToken);
         }
     }
 }

@@ -6,21 +6,22 @@ using CalendarAPI.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEvents
+namespace CalendarAPI.Application.QuerySide.Queries.GetCalendarEventsSortedPerTime
 {
-    public class GetAllCalendarEventsQueryHandler : IRequestHandler<GetAllCalendarEventsQuery, CalendarEventViewModel[]>
+    public class GetCalendarEventsSortedPerTimeQueryHandler : IRequestHandler<GetCalendarEventsSortedPerTimeQuery, CalendarEventViewModel[]>
     {
         private readonly CalendarContext _context;
 
-        public GetAllCalendarEventsQueryHandler(CalendarContext context)
+        public GetCalendarEventsSortedPerTimeQueryHandler(CalendarContext context)
         {
             _context = context;
         }
 
-        public async Task<CalendarEventViewModel[]> Handle(GetAllCalendarEventsQuery request,
+        public async Task<CalendarEventViewModel[]> Handle(GetCalendarEventsSortedPerTimeQuery request,
             CancellationToken cancellationToken)
             => await _context.CalendarEvents
-                .Select(calendarEvent =>
+                .OrderByDescending(ce => ce.Time)
+                .Select(calendarEvent => 
                     new CalendarEventViewModel(
                         calendarEvent.Id,
                         calendarEvent.Name,

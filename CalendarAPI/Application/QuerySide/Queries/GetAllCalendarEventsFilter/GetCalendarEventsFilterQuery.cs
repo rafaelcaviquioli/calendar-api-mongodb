@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using CalendarAPI.Application.QuerySide.Filters;
 using CalendarAPI.Application.QuerySide.ViewModels;
 using MediatR;
