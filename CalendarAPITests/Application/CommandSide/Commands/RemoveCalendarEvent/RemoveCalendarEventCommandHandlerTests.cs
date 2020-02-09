@@ -7,6 +7,7 @@ using CalendarAPI.Domain.Entity;
 using CalendarAPI.Domain.Repositories;
 using CalendarAPI.Infrastructure;
 using CalendarAPI.Infrastructure.Repositories;
+using CalendarAPITests.TestUtils;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,7 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
             calendarEvent.AddMember("Aleida");
             _context.Add(calendarEvent);
             await _context.SaveChangesAsync();
+            _context.DetachAllEntities();
 
             var command = new RemoveCalendarEventCommand(calendarEvent.Id);
             var handler = new RemoveCalendarEventCommandHandler(_calendarEventRepository);

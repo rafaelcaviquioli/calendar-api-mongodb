@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CalendarAPI.Domain.Entity
 {
@@ -8,7 +9,6 @@ namespace CalendarAPI.Domain.Entity
         public int EventId { get; set; }
         [Required]
         public string Name { get; set; }
-        public CalendarEvent CalendarEvent { get; set; }
         
         public Member(string name)
         {

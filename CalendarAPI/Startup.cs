@@ -10,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace CalendarAPI
 {
@@ -27,6 +25,10 @@ namespace CalendarAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddScoped(provider =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
@@ -38,8 +40,7 @@ namespace CalendarAPI
             });
 
             services.AddDbContext<CalendarContext>();
-            services.AddControllers();
-            
+
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddScoped<ICalendarEventRepository, CalendarCalendarEventRepository>();
             

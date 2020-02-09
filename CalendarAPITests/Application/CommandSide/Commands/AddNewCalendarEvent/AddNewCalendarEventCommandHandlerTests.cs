@@ -6,6 +6,7 @@ using CalendarAPI.Domain.Entity;
 using CalendarAPI.Domain.Repositories;
 using CalendarAPI.Infrastructure;
 using CalendarAPI.Infrastructure.Repositories;
+using CalendarAPITests.TestUtils;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,8 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
             
             var handler = new AddNewCalendarEventCommandHandler(_calendarEventRepository);
             var calendarEventId = await handler.Handle(command, CancellationToken.None);
-
+            _context.DetachAllEntities();
+            
             var calendarEvent = await _context.CalendarEvents
                 .Include(ce => ce.Members)
                 .FirstOrDefaultAsync(ce => ce.Id == calendarEventId);

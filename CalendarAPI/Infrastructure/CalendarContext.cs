@@ -16,10 +16,10 @@ namespace CalendarAPI.Infrastructure
         {
             modelBuilder.Entity<CalendarEvent>()
                 .HasMany(e => e.Members)
-                .WithOne(m => m.CalendarEvent)
+                .WithOne()
                 .HasForeignKey(m => m.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }
