@@ -5,19 +5,10 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
 {
     public class AddNewEventCommand : IRequest<int>
     {
-        public string Name { get; }
-        public DateTime Time { get; }
-        public string Location { get; }
-        public string Organizer { get; }
-        public string[] Members { get; }
-
-        public AddNewEventCommand(string name, DateTime time, string location, string organizer, string[] members)
-        {
-            Name = name;
-            Time = time;
-            Location = location;
-            Organizer = organizer;
-            Members = members;
-        }
+        public string Name { get; set; }
+        public int Time { get; set; }
+        public string Location { get; set; }
+        public string EventOrganizer { get; set; }
+        public string[] Members { get; set; }
     }
 }

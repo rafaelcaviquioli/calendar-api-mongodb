@@ -10,7 +10,7 @@ namespace CalendarAPI.Domain.Entity
         [Required]
         public string Name { get; set; }
         [Required]
-        public DateTime Time { get; set; }
+        public int Time { get; set; }
         [Required]
         public string Location { get; set; }
         [Required]
@@ -18,7 +18,7 @@ namespace CalendarAPI.Domain.Entity
 
         public virtual ICollection<Member> Members { get; private set; } = new List<Member>();
         
-        public CalendarEvent(string name, DateTime time, string location, string organizer)
+        public CalendarEvent(string name, int time, string location, string organizer)
         {
             Name = name;
             Time = time;

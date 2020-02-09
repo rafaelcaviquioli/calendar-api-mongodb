@@ -21,7 +21,7 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
                 command.Name,
                 command.Time,
                 command.Location,
-                command.Organizer
+                command.EventOrganizer
             );
             foreach (var memberName in command.Members)
             {
