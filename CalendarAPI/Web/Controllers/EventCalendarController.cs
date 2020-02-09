@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using CalendarAPI.Application.CommandSide.Commands.AddNewEvent;
+using CalendarAPI.Application.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +25,22 @@ namespace CalendarAPI.Controllers
             var id = await _mediator.Send(command);
 
             return Created($"calendar/{id}", id);
+        }
+
+        [HttpDelete, Route("/{calendarEventId}")]
+        public async Task<ActionResult> RemoveCalendarEvent([FromRoute] int calendarEventId)
+        {
+            try
+            {
+                var command = new RemoveCalendarEventCommand(calendarEventId);
+                await _mediator.Send(command);
+
+                return Ok();
+            }
+            catch (ResourceNotFoundException)
+            {
+                return NotFound(calendarEventId);
+            }
         }
     }
 }
