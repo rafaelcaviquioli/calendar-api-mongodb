@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
 {
-    public class AddNewEventCommand : IRequest<int>
+    public class AddNewCalendarEventCommand : IRequest<int>
     {
         public string Name { get; set; }
         public long Time { get; set; }

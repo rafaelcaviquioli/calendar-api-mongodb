@@ -24,13 +24,13 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
                 .UseInMemoryDatabase(databaseName: "Test")
                 .Options;
             _context = new CalendarContext(options);
-            _eventRepository = new EventRepository(_context);
+            _eventRepository = new CalendarEventRepository(_context);
         }
 
         [Fact]
         public async Task Handle_ShouldInsertNewEventInDatabase_WhenAllPropertiesWasFilled()
         {
-            var command = new AddNewEventCommand()
+            var command = new AddNewCalendarEventCommand()
             {
                 Name = "Music fetival",
                 Location = "Oosterpark, Amsterdam ",
@@ -39,7 +39,7 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
                 Members = new [] { "Aleida", "Angelique", "Vans" }
             };
             
-            var handler = new AddNewEventCommandHandler(_eventRepository);
+            var handler = new AddNewCalendarEventCommandHandler(_eventRepository);
             var calendarEventId = await handler.Handle(command, CancellationToken.None);
 
             var calendarEvent = await _context.CalendarEvents

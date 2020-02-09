@@ -18,7 +18,7 @@ namespace CalendarAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> AddNewEvent([FromBody] AddNewEventCommand command)
+        public async Task<ActionResult<int>> AddNewEvent([FromBody] AddNewCalendarEventCommand command)
         {
             var id = await _mediator.Send(command);
 

@@ -6,16 +6,16 @@ using MediatR;
 
 namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
 {
-    public class AddNewEventCommandHandler : IRequestHandler<AddNewEventCommand, int>
+    public class AddNewCalendarEventCommandHandler : IRequestHandler<AddNewCalendarEventCommand, int>
     {
         private readonly IEventRepository _eventRepository;
 
-        public AddNewEventCommandHandler(IEventRepository eventRepository)
+        public AddNewCalendarEventCommandHandler(IEventRepository eventRepository)
         {
             _eventRepository = eventRepository;
         }
 
-        public async Task<int> Handle(AddNewEventCommand command, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddNewCalendarEventCommand command, CancellationToken cancellationToken)
         {
             var calendarEvent = new CalendarEvent(
                 command.Name,

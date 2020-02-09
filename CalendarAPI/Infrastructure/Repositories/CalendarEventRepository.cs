@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalendarAPI.Infrastructure.Repositories
 {
-    public class EventRepository : IEventRepository
+    public class CalendarEventRepository : IEventRepository
     {
         private readonly CalendarContext _context;
 
-        public EventRepository(CalendarContext context)
+        public CalendarEventRepository(CalendarContext context)
         {
             _context = context;
         }

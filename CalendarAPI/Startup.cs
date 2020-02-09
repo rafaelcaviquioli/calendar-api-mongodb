@@ -41,7 +41,7 @@ namespace CalendarAPI
             services.AddControllers();
             
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
-            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IEventRepository, CalendarEventRepository>();
             
             services.AddSwaggerGen(c =>
             {
