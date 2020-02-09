@@ -9,7 +9,7 @@ using CalendarAPI.Application.QuerySide.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CalendarAPI.Controllers
+namespace CalendarAPI.Web.Controllers
 {
     [ApiController]
     [Route("calendar")]
