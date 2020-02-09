@@ -5,7 +5,8 @@ namespace CalendarAPI.Infrastructure
 {
     public class CalendarContext : DbContext
     {
-        public DbSet<Event> Events { get; set; }
+        public DbSet<CalendarEvent> CalendarEvents { get; set; }
+        public DbSet<Member> Members { get; set; }
 
         public CalendarContext(DbContextOptions<CalendarContext> options) : base(options)
         {
@@ -13,9 +14,9 @@ namespace CalendarAPI.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Event>()
+            modelBuilder.Entity<CalendarEvent>()
                 .HasMany(e => e.Members)
-                .WithOne(m => m.Event)
+                .WithOne(m => m.CalendarEvent)
                 .HasForeignKey(m => m.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
             

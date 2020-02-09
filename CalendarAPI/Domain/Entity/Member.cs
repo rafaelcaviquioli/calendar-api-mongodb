@@ -4,11 +4,15 @@ namespace CalendarAPI.Domain.Entity
 {
     public class Member
     {
-        public int Id { get; private set; }
+        public int Id { get; set; }
+        public int EventId { get; set; }
         [Required]
-        public int EventId { get; private set; }
-        [Required]
-        public string Name { get; private set; }
-        public Event Event { get; private set; }
+        public string Name { get; set; }
+        public CalendarEvent CalendarEvent { get; set; }
+        
+        public Member(string name)
+        {
+            Name = name;
+        }
     }
 }

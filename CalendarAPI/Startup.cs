@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CalendarAPI.Domain.Repositories;
 using CalendarAPI.Infrastructure;
+using CalendarAPI.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -44,6 +46,7 @@ namespace CalendarAPI
             services.AddControllers();
             
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddScoped<IEventRepository, EventRepository>();
 
         }
 
