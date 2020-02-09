@@ -1,0 +1,66 @@
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using CalendarAPI.Application.Exceptions;
+using CalendarAPI.Domain.Entity;
+using CalendarAPI.Domain.Repositories;
+using CalendarAPI.Infrastructure;
+using CalendarAPI.Infrastructure.Repositories;
+using FluentAssertions;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Xunit;
+
+namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
+{
+    public class DeleteCalendarEventCommandHandlerTests
+    {
+        private readonly ICalendarEventRepository _calendarEventRepository;
+        private readonly CalendarContext _context;
+
+        public DeleteCalendarEventCommandHandlerTests()
+        {
+            var options = new DbContextOptionsBuilder<CalendarContext>()
+                .UseInMemoryDatabase(databaseName: "Test")
+                .Options;
+            _context = new CalendarContext(options);
+            _calendarEventRepository = new CalendarCalendarEventRepository(_context);
+        }
+
+        [Fact]
+        public async Task Handle_ShouldThrowResourceNotFoundException_WhenTryToRemoveACalendarEventThatDoesNotExists()
+        {
+            var command = new RemoveCalendarEventCommand(1234556789);
+            var handler = new RemoveCalendarEventCommandHandler(_calendarEventRepository);
+
+            await Assert.ThrowsAsync<ResourceNotFoundException>(
+                async () => await handler.Handle(command, CancellationToken.None)
+            );
+        }
+
+        [Fact]
+        public async Task Handle_RemoveCalendarEvent_WhenItExists()
+        {
+            var calendarEvent = new CalendarEvent(
+                "Music fetival",
+                DateTimeOffset.Now.ToUnixTimeSeconds(),
+                "Oosterpark, Amsterdam ",
+                "Rafael Caviquioli"
+            );
+            calendarEvent.AddMember("Aleida");
+            _context.Add(calendarEvent);
+            await _context.SaveChangesAsync();
+
+            var command = new RemoveCalendarEventCommand(calendarEvent.Id);
+            var handler = new RemoveCalendarEventCommandHandler(_calendarEventRepository);
+            await handler.Handle(command, CancellationToken.None);
+
+            var calendarEventExpected = await _context.CalendarEvents
+                .FirstOrDefaultAsync(ce => ce.Id == calendarEvent.Id);
+
+            calendarEventExpected
+                .Should().BeNull("Because calendar event was removed from database");
+        }
+    }
+}

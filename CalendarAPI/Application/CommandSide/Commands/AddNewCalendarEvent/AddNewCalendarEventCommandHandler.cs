@@ -8,11 +8,11 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
 {
     public class AddNewCalendarEventCommandHandler : IRequestHandler<AddNewCalendarEventCommand, int>
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly ICalendarEventRepository _calendarEventRepository;
 
-        public AddNewCalendarEventCommandHandler(IEventRepository eventRepository)
+        public AddNewCalendarEventCommandHandler(ICalendarEventRepository calendarEventRepository)
         {
-            _eventRepository = eventRepository;
+            _calendarEventRepository = calendarEventRepository;
         }
 
         public async Task<int> Handle(AddNewCalendarEventCommand command, CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
                 calendarEvent.AddMember(memberName);
             }
             
-            await _eventRepository.Save(calendarEvent);
+            await _calendarEventRepository.Save(calendarEvent);
 
             return calendarEvent.Id;
         }

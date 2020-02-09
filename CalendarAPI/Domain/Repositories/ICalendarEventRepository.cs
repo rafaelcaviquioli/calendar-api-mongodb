@@ -4,11 +4,11 @@ using CalendarAPI.Domain.Entity;
 
 namespace CalendarAPI.Domain.Repositories
 {
-    public interface IEventRepository
+    public interface ICalendarEventRepository
     {
         Task Save(CalendarEvent calendarEvent);
         Task<CalendarEvent> FindOne(int id);
-        Task Remove(int id);
+        Task Remove(CalendarEvent calendarEvent);
         IEnumerable<CalendarEvent> List();
     }
 }

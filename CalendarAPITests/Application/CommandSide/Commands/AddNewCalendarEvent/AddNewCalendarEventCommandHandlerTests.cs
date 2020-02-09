@@ -13,18 +13,18 @@ using Xunit;
 
 namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
 {
-    public class AddNewEventCommandHandlerTests 
+    public class AddNewCalendarEventCommandHandlerTests 
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly ICalendarEventRepository _calendarEventRepository;
         private readonly CalendarContext _context;
 
-        public AddNewEventCommandHandlerTests()
+        public AddNewCalendarEventCommandHandlerTests()
         {
             var options = new DbContextOptionsBuilder<CalendarContext>()
                 .UseInMemoryDatabase(databaseName: "Test")
                 .Options;
             _context = new CalendarContext(options);
-            _eventRepository = new CalendarEventRepository(_context);
+            _calendarEventRepository = new CalendarCalendarEventRepository(_context);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
                 Members = new [] { "Aleida", "Angelique", "Vans" }
             };
             
-            var handler = new AddNewCalendarEventCommandHandler(_eventRepository);
+            var handler = new AddNewCalendarEventCommandHandler(_calendarEventRepository);
             var calendarEventId = await handler.Handle(command, CancellationToken.None);
 
             var calendarEvent = await _context.CalendarEvents

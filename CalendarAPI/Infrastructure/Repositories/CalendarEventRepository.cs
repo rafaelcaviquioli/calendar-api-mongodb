@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalendarAPI.Infrastructure.Repositories
 {
-    public class CalendarEventRepository : IEventRepository
+    public class CalendarCalendarEventRepository : ICalendarEventRepository
     {
         private readonly CalendarContext _context;
 
-        public CalendarEventRepository(CalendarContext context)
+        public CalendarCalendarEventRepository(CalendarContext context)
         {
             _context = context;
         }
@@ -36,13 +36,14 @@ namespace CalendarAPI.Infrastructure.Repositories
         }
 
         public Task<CalendarEvent> FindOne(int id)
-        {
-            throw new System.NotImplementedException();
-        }
+            => _context.CalendarEvents
+                .Include(ce => ce.Members)
+                .FirstOrDefaultAsync(ce => ce.Id == id);
 
-        public Task Remove(int id)
+        public Task Remove(CalendarEvent calendarEvent)
         {
-            throw new System.NotImplementedException();
+            _context.CalendarEvents.Remove(calendarEvent);
+            return _context.SaveChangesAsync();
         }
 
         public IEnumerable<CalendarEvent> List()
