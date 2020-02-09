@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using CalendarAPI.Application.CommandSide.Commands.AddNewEvent;
 using CalendarAPI.Application.Exceptions;
+using CalendarAPI.Application.QuerySide.Filters;
 using CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEvents;
+using CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEventsFilter;
 using CalendarAPI.Application.QuerySide.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +66,15 @@ namespace CalendarAPI.Controllers
         public async Task<ActionResult<CalendarEventViewModel[]>> GetAllCalendarEvents()
         {
             var request = new GetAllCalendarEventsQuery();
+            var calendarEvents = await _mediator.Send(request);
+
+            return Ok(calendarEvents);
+        }
+        
+        [HttpGet, Route("query")]
+        public async Task<ActionResult<CalendarEventViewModel[]>> GetCalendarEventsFilter([FromQuery] CalendarEventFilter calendarEventFilter)
+        {
+            var request = new GetCalendarEventsFilterQuery(calendarEventFilter);
             var calendarEvents = await _mediator.Send(request);
 
             return Ok(calendarEvents);
