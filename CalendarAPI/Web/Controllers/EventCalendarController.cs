@@ -1,8 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CalendarAPI.Application.CommandSide.Commands.AddNewEvent;
 using CalendarAPI.Application.Exceptions;
+using CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEvents;
+using CalendarAPI.Application.QuerySide.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,8 +42,10 @@ namespace CalendarAPI.Controllers
                 return NotFound(calendarEventId);
             }
         }
+
         [HttpPut, Route("/{calendarEventId}")]
-        public async Task<ActionResult> EditCalendarEvent([FromRoute] int calendarEventId, [FromBody] EditCalendarEventCommand command)
+        public async Task<ActionResult> EditCalendarEvent([FromRoute] int calendarEventId,
+            [FromBody] EditCalendarEventCommand command)
         {
             try
             {
@@ -56,6 +58,15 @@ namespace CalendarAPI.Controllers
             {
                 return NotFound(calendarEventId);
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<CalendarEventViewModel[]>> GetAllCalendarEvents()
+        {
+            var request = new GetAllCalendarEventsQuery();
+            var calendarEvents = await _mediator.Send(request);
+
+            return Ok(calendarEvents);
         }
     }
 }
