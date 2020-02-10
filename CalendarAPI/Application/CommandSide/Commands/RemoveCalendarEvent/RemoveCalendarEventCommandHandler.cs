@@ -1,11 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CalendarAPI.Application.Exceptions;
-using CalendarAPI.Domain.Entity;
 using CalendarAPI.Domain.Repositories;
 using MediatR;
 
-namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
+namespace CalendarAPI.Application.CommandSide.Commands.RemoveCalendarEvent
 {
     public class RemoveCalendarEventCommandHandler : IRequestHandler<RemoveCalendarEventCommand>
     {

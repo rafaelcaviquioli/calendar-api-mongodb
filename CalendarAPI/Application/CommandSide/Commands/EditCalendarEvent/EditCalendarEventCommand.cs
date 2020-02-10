@@ -1,7 +1,6 @@
-using System;
 using MediatR;
 
-namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
+namespace CalendarAPI.Application.CommandSide.Commands.EditCalendarEvent
 {
     public class EditCalendarEventCommand : IRequest
     {

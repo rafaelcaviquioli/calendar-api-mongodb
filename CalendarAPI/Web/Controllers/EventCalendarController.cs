@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
-using CalendarAPI.Application.CommandSide.Commands.AddNewEvent;
+using CalendarAPI.Application.CommandSide.Commands.AddNewCalendarEvent;
+using CalendarAPI.Application.CommandSide.Commands.EditCalendarEvent;
+using CalendarAPI.Application.CommandSide.Commands.RemoveCalendarEvent;
 using CalendarAPI.Application.Exceptions;
 using CalendarAPI.Application.QuerySide.Filters;
 using CalendarAPI.Application.QuerySide.Queries.GetAllCalendarEvents;
