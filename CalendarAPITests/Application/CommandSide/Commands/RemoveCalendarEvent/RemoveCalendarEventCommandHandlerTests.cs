@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CalendarAPI.Application.CommandSide.Commands.RemoveCalendarEvent;
 using CalendarAPI.Application.Exceptions;
 using CalendarAPI.Domain.Entity;
 using CalendarAPI.Domain.Repositories;
@@ -9,11 +9,10 @@ using CalendarAPI.Infrastructure;
 using CalendarAPI.Infrastructure.Repositories;
 using CalendarAPITests.TestUtils;
 using FluentAssertions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
+namespace CalendarAPITests.Application.CommandSide.Commands.RemoveCalendarEvent
 {
     public class DeleteCalendarEventCommandHandlerTests
     {

@@ -4,7 +4,7 @@ using CalendarAPI.Domain.Entity;
 using CalendarAPI.Domain.Repositories;
 using MediatR;
 
-namespace CalendarAPI.Application.CommandSide.Commands.AddNewEvent
+namespace CalendarAPI.Application.CommandSide.Commands.AddNewCalendarEvent
 {
     public class AddNewCalendarEventCommandHandler : IRequestHandler<AddNewCalendarEventCommand, int>
     {

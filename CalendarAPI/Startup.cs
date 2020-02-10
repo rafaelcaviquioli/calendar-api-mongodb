@@ -32,10 +32,12 @@ namespace CalendarAPI
             services.AddScoped(provider =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
-                var options = optionsBuilder.UseSqlServer(
-                    Configuration.GetConnectionString("CalendarDatabase")
-                ).Options;
-
+                //var options = optionsBuilder.UseSqlServer(
+                //    Configuration.GetConnectionString("CalendarDatabase")
+                //).Options;
+                var options = new DbContextOptionsBuilder<CalendarContext>()
+                    .UseInMemoryDatabase(databaseName: "Test")
+                    .Options;
                 return new CalendarContext(options);
             });
 
