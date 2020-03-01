@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CalendarAPIMongo.Domain.Entity;
+using CalendarAPIMongo.Domain.Models;
 
 namespace CalendarAPIMongo.Domain.Repositories
 {
     public interface ICalendarEventRepository
     {
-        Task Save(CalendarEvent calendarEvent);
-        Task<CalendarEvent> FindOne(int id);
+        Task Update(CalendarEvent calendarEvent);
+        Task Insert(CalendarEvent calendarEvent);
+        Task<CalendarEvent> FindOne(string id);
         Task Remove(CalendarEvent calendarEvent);
         IEnumerable<CalendarEvent> List();
     }

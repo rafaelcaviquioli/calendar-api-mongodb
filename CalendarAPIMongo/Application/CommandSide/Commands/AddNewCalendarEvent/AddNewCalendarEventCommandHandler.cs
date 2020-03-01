@@ -1,12 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
-using CalendarAPIMongo.Domain.Entity;
+using CalendarAPIMongo.Domain.Models;
 using CalendarAPIMongo.Domain.Repositories;
 using MediatR;
 
 namespace CalendarAPIMongo.Application.CommandSide.Commands.AddNewCalendarEvent
 {
-    public class AddNewCalendarEventCommandHandler : IRequestHandler<AddNewCalendarEventCommand, int>
+    public class AddNewCalendarEventCommandHandler : IRequestHandler<AddNewCalendarEventCommand, string>
     {
         private readonly ICalendarEventRepository _calendarEventRepository;
 
@@ -15,7 +15,7 @@ namespace CalendarAPIMongo.Application.CommandSide.Commands.AddNewCalendarEvent
             _calendarEventRepository = calendarEventRepository;
         }
 
-        public async Task<int> Handle(AddNewCalendarEventCommand command, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddNewCalendarEventCommand command, CancellationToken cancellationToken)
         {
             var calendarEvent = new CalendarEvent(
                 command.Name,
@@ -28,7 +28,7 @@ namespace CalendarAPIMongo.Application.CommandSide.Commands.AddNewCalendarEvent
                 calendarEvent.AddMember(memberName);
             }
             
-            await _calendarEventRepository.Save(calendarEvent);
+            await _calendarEventRepository.Insert(calendarEvent);
 
             return calendarEvent.Id;
         }

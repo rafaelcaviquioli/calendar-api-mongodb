@@ -2,7 +2,7 @@ using MediatR;
 
 namespace CalendarAPIMongo.Application.CommandSide.Commands.AddNewCalendarEvent
 {
-    public class AddNewCalendarEventCommand : IRequest<int>
+    public class AddNewCalendarEventCommand : IRequest<string>
     {
         public string Name { get; set; }
         public long Time { get; set; }

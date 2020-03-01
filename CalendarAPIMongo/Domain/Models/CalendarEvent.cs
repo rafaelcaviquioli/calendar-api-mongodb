@@ -1,16 +1,19 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace CalendarAPIMongo.Domain.Entity
+namespace CalendarAPIMongo.Domain.Models
 {
     public class CalendarEvent
     {
-        public int Id { get; set; }
-        [Required] public string Name { get; set; }
-        [Required] public long Time { get; set; }
-        [Required] public string Location { get; set; }
-        [Required] public string Organizer { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public long Time { get; set; }
+        public string Location { get; set; }
+        public string Organizer { get; set; }
 
         public virtual ICollection<Member> Members { get; private set; } = new List<Member>();
 

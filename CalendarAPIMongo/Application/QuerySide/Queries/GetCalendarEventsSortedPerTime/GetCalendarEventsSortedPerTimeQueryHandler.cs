@@ -2,26 +2,28 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CalendarAPIMongo.Application.QuerySide.ViewModels;
-using CalendarAPIMongo.Infrastructure;
+using CalendarAPIMongo.Domain.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CalendarAPIMongo.Application.QuerySide.Queries.GetCalendarEventsSortedPerTime
 {
     public class GetCalendarEventsSortedPerTimeQueryHandler : IRequestHandler<GetCalendarEventsSortedPerTimeQuery, CalendarEventViewModel[]>
     {
-        private readonly CalendarContext _context;
+        private readonly ICalendarEventRepository _repository;
 
-        public GetCalendarEventsSortedPerTimeQueryHandler(CalendarContext context)
+        public GetCalendarEventsSortedPerTimeQueryHandler(ICalendarEventRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        public async Task<CalendarEventViewModel[]> Handle(GetCalendarEventsSortedPerTimeQuery request,
-            CancellationToken cancellationToken)
-            => await _context.CalendarEvents
+        public Task<CalendarEventViewModel[]> Handle(
+            GetCalendarEventsSortedPerTimeQuery request,
+            CancellationToken cancellationToken
+        )
+        {
+            var calendarEvents = _repository.List()
                 .OrderByDescending(ce => ce.Time)
-                .Select(calendarEvent => 
+                .Select(calendarEvent =>
                     new CalendarEventViewModel(
                         calendarEvent.Id,
                         calendarEvent.Name,
@@ -31,6 +33,9 @@ namespace CalendarAPIMongo.Application.QuerySide.Queries.GetCalendarEventsSorted
                         calendarEvent.Members.Select(m => m.Name).ToArray()
                     )
                 )
-                .ToArrayAsync(cancellationToken: cancellationToken);
+                .ToArray();
+
+            return Task.FromResult(calendarEvents);
+        }
     }
 }

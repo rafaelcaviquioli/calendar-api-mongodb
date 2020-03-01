@@ -33,5 +33,5 @@ $ dotnet test
 #### Build docker image
 
 ```bash
-$ docker build -t rafaelcaviquioli/calendar-api-mongodb:latest ./CalendarAPI
+$ docker build -t rafaelcaviquioli/calendar-api-mongodb:latest ./CalendarAPIMongo
 ```

@@ -2,24 +2,25 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CalendarAPIMongo.Application.QuerySide.ViewModels;
-using CalendarAPIMongo.Infrastructure;
+using CalendarAPIMongo.Domain.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CalendarAPIMongo.Application.QuerySide.Queries.GetAllCalendarEvents
 {
     public class GetAllCalendarEventsQueryHandler : IRequestHandler<GetAllCalendarEventsQuery, CalendarEventViewModel[]>
     {
-        private readonly CalendarContext _context;
+        private readonly ICalendarEventRepository _repository;
 
-        public GetAllCalendarEventsQueryHandler(CalendarContext context)
+        public GetAllCalendarEventsQueryHandler(ICalendarEventRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
-        public async Task<CalendarEventViewModel[]> Handle(GetAllCalendarEventsQuery request,
+        public Task<CalendarEventViewModel[]> Handle(
+            GetAllCalendarEventsQuery request,
             CancellationToken cancellationToken)
-            => await _context.CalendarEvents
+        {
+            var calendarEvents = _repository.List()
                 .Select(calendarEvent =>
                     new CalendarEventViewModel(
                         calendarEvent.Id,
@@ -29,7 +30,9 @@ namespace CalendarAPIMongo.Application.QuerySide.Queries.GetAllCalendarEvents
                         calendarEvent.Organizer,
                         calendarEvent.Members.Select(m => m.Name).ToArray()
                     )
-                )
-                .ToArrayAsync(cancellationToken: cancellationToken);
+                ).ToArray();
+
+            return Task.FromResult(calendarEvents);
+        }
     }
 }

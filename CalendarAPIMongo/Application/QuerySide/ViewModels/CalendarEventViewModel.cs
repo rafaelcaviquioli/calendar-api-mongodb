@@ -2,7 +2,7 @@ namespace CalendarAPIMongo.Application.QuerySide.ViewModels
 {
     public class CalendarEventViewModel
     {
-        public CalendarEventViewModel(int id, string name, long time, string location, string eventOrganizer, string[] members)
+        public CalendarEventViewModel(string id, string name, long time, string location, string eventOrganizer, string[] members)
         {
             Id = id;
             Name = name;
@@ -12,7 +12,7 @@ namespace CalendarAPIMongo.Application.QuerySide.ViewModels
             Members = string.Join(",", members); 
         }
 
-        public int Id { get; }
+        public string Id { get; }
         public string Name { get; }
         public long Time { get; }
         public string Location { get; }

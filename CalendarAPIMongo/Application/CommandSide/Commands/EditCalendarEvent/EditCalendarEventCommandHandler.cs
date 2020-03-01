@@ -30,7 +30,7 @@ namespace CalendarAPIMongo.Application.CommandSide.Commands.EditCalendarEvent
             );
             calendarEvent.EditMembers(command.Members);
             
-            await _calendarEventRepository.Save(calendarEvent);
+            await _calendarEventRepository.Update(calendarEvent);
 
             return Unit.Value;
         }

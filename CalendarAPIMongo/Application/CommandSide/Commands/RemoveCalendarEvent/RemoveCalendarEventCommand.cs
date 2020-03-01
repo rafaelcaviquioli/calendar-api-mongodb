@@ -4,8 +4,8 @@ namespace CalendarAPIMongo.Application.CommandSide.Commands.RemoveCalendarEvent
 {
     public class RemoveCalendarEventCommand : IRequest
     {
-        public int Id { get; }
-        public RemoveCalendarEventCommand(int id)
+        public string Id { get; }
+        public RemoveCalendarEventCommand(string id)
         {
             Id = id;
         }

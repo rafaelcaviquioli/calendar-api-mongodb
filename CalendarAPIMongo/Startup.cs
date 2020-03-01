@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace CalendarAPIMongo
@@ -25,26 +26,19 @@ namespace CalendarAPIMongo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            // requires using Microsoft.Extensions.Options
+            services.Configure<MongoDatabaseSettings>(
+                Configuration.GetSection(nameof(MongoDatabaseSettings)));
+
+            services.AddSingleton<IMongoDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
+
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-            services.AddScoped(provider =>
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
-                //var options = optionsBuilder.UseSqlServer(
-                //    Configuration.GetConnectionString("CalendarDatabase")
-                //).Options;
-                var options = new DbContextOptionsBuilder<CalendarContext>()
-                    .UseInMemoryDatabase(databaseName: "Test")
-                    .Options;
-                return new CalendarContext(options);
-            });
-
-            services.AddDbContext<CalendarContext>();
 
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
-            services.AddScoped<ICalendarEventRepository, CalendarCalendarEventRepository>();
+            services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
             
             services.AddSwaggerGen(c =>
             {

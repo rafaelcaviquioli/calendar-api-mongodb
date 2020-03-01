@@ -1,54 +1,41 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using CalendarAPIMongo.Domain.Entity;
+using CalendarAPIMongo.Domain.Models;
 using CalendarAPIMongo.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace CalendarAPIMongo.Infrastructure.Repositories
 {
-    public class CalendarCalendarEventRepository : ICalendarEventRepository
+    public class CalendarEventRepository : ICalendarEventRepository
     {
-        private readonly CalendarContext _context;
+        private readonly IMongoCollection<CalendarEvent> _calendarEvents;
 
-        public CalendarCalendarEventRepository(CalendarContext context)
+        public CalendarEventRepository(IMongoDatabaseSettings settings)
         {
-            _context = context;
+            var client = new MongoClient(settings.ConnectionString);
+            var database = client.GetDatabase(settings.DatabaseName);
+
+            _calendarEvents = database.GetCollection<CalendarEvent>(settings.CalendarEventsCollectionName);
         }
 
-        public async Task Save(CalendarEvent calendarEvent)
-        {
-            var entity = await _context.CalendarEvents
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == calendarEvent.Id);
+        public async Task Update(CalendarEvent calendarEventIn)
+            => await _calendarEvents.ReplaceOneAsync(
+                calendarEvent => calendarEvent.Id == calendarEventIn.Id,
+                calendarEventIn
+            );
 
-            var entityAlreadyExists = entity != null;
-            if (entityAlreadyExists)
-            {
-                _context.Update(calendarEvent);
-            }
-            else
-            {
-                _context.Add(calendarEvent);
-            }
+        public async Task Insert(CalendarEvent calendarEventIn)
+            => await _calendarEvents.InsertOneAsync(calendarEventIn);
 
-            await _context.SaveChangesAsync();
-        }
+        public async Task<CalendarEvent> FindOne(string id) =>
+            await _calendarEvents
+                .Find<CalendarEvent>(calendarEvent => calendarEvent.Id == id)
+                .FirstOrDefaultAsync();
 
-        public Task<CalendarEvent> FindOne(int id)
-            => _context.CalendarEvents
-                .Include(ce => ce.Members)
-                .FirstOrDefaultAsync(ce => ce.Id == id);
+        public async Task Remove(CalendarEvent calendarEventIn) =>
+            await _calendarEvents.DeleteOneAsync(calendarEvent => calendarEvent.Id == calendarEventIn.Id);
 
-        public Task Remove(CalendarEvent calendarEvent)
-        {
-            _context.CalendarEvents.Remove(calendarEvent);
-            return _context.SaveChangesAsync();
-        }
-
-        public IEnumerable<CalendarEvent> List()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IEnumerable<CalendarEvent> List() =>
+            _calendarEvents.AsQueryable<CalendarEvent>();
     }
 }

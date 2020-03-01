@@ -33,7 +33,7 @@ namespace CalendarAPIMongo.Web.Controllers
         }
 
         [HttpDelete, Route("/{calendarEventId}")]
-        public async Task<ActionResult> RemoveCalendarEvent([FromRoute] int calendarEventId)
+        public async Task<ActionResult> RemoveCalendarEvent([FromRoute] string calendarEventId)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace CalendarAPIMongo.Web.Controllers
         }
 
         [HttpPut, Route("/{calendarEventId}")]
-        public async Task<ActionResult> EditCalendarEvent([FromRoute] int calendarEventId,
+        public async Task<ActionResult> EditCalendarEvent([FromRoute] string calendarEventId,
             [FromBody] EditCalendarEventCommand command)
         {
             try
