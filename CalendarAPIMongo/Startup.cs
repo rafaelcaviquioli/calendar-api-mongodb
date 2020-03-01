@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
+using MongoDatabaseSettings = CalendarAPIMongo.Infrastructure.MongoDatabaseSettings;
 
 namespace CalendarAPIMongo
 {
@@ -39,12 +41,19 @@ namespace CalendarAPIMongo
 
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddScoped<ICalendarEventRepository, CalendarEventRepository>();
-            
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Calendar API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Calendar API", Version = "v1"});
             });
+            services.AddScoped(provider =>
+            {
+                var settings = provider.GetService<IMongoDatabaseSettings>();
+                var client = new MongoClient(settings.ConnectionString);
+                var database = client.GetDatabase(settings.DatabaseName);
 
+                return new MongoDbContext(database);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,14 +65,10 @@ namespace CalendarAPIMongo
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
         }
     }
 }
