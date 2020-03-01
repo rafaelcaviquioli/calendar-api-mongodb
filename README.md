@@ -3,7 +3,7 @@
 - .NET Core 
 - CQRS Architecture
   - MediatR
-- EF Core
+- Mongo DB
 - Swagger
 - Docker
 - Unit Tests
@@ -12,12 +12,12 @@
  
 #### Project docker image is available in Docker Hub
  
-[github.com/rafaelcaviquioli/calendar-api-dotnet](https://github.com/rafaelcaviquioli/calendar-api-dotnet)
+[github.com/rafaelcaviquioli/calendar-api-mongodb](https://github.com/rafaelcaviquioli/calendar-api-mongodb)
 
 ##### Start project
 
 ```bash
-$ docker run -it -p 80:80 rafaelcaviquioli/calendar-api-dotnet:latest
+$ docker run -it -p 80:80 rafaelcaviquioli/calendar-api-mongodb:latest
 ```
 
 #### OpenAPI Specification
@@ -33,5 +33,5 @@ $ dotnet test
 #### Build docker image
 
 ```bash
-$ docker build -t rafaelcaviquioli/calendar-api-dotnet:latest ./CalendarAPI
+$ docker build -t rafaelcaviquioli/calendar-api-mongodb:latest ./CalendarAPI
 ```

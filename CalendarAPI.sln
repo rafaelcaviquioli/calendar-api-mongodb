@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarAPI", "CalendarAPI\CalendarAPI.csproj", "{2A345BC6-6012-4E53-A010-710196D75CA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarAPIMongo", "CalendarAPIMongo\CalendarAPIMongo.csproj", "{2A345BC6-6012-4E53-A010-710196D75CA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarAPITests", "CalendarAPITests\CalendarAPITests.csproj", "{35CC967C-DBC0-4C99-9086-C3B664959290}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarAPIMongoTests", "CalendarAPIMongoTests\CalendarAPIMongoTests.csproj", "{35CC967C-DBC0-4C99-9086-C3B664959290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
