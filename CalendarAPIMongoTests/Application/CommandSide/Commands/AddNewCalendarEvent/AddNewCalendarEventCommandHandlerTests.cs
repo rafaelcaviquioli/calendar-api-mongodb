@@ -6,25 +6,26 @@ using CalendarAPIMongo.Application.CommandSide.Commands.AddNewCalendarEvent;
 using CalendarAPIMongo.Domain.Repositories;
 using CalendarAPIMongo.Infrastructure;
 using CalendarAPIMongo.Infrastructure.Repositories;
-using CalendarAPITests.TestUtils;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+using Mongo2Go;
 using Xunit;
+using MongoDB.Driver;
 
 namespace CalendarAPITests.Application.CommandSide.Commands.AddNewCalendarEvent
 {
     public class AddNewCalendarEventCommandHandlerTests 
     {
         private readonly ICalendarEventRepository _calendarEventRepository;
-        private readonly CalendarContext _context;
+        private readonly MongoDbContext _context;
 
         public AddNewCalendarEventCommandHandlerTests()
         {
-            var options = new DbContextOptionsBuilder<CalendarContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
-                .Options;
-            _context = new CalendarContext(options);
-            _calendarEventRepository = new CalendarCalendarEventRepository(_context);
+            var runner = MongoDbRunner.Start(singleNodeReplSet: true, singleNodeReplSetWaitTimeout: 10);
+            var server = new MongoClient(runner.ConnectionString);
+
+            var database = server.GetDatabase("inMemoryDatabase");
+            _context = new MongoDbContext(database);
+            _calendarEventRepository = new CalendarEventRepository(_context);
         }
 
         [Fact]
@@ -41,11 +42,10 @@ namespace CalendarAPITests.Application.CommandSide.Commands.AddNewCalendarEvent
             
             var handler = new AddNewCalendarEventCommandHandler(_calendarEventRepository);
             var calendarEventId = await handler.Handle(command, CancellationToken.None);
-            _context.DetachAllEntities();
             
-            var calendarEvent = await _context.CalendarEvents
-                .Include(ce => ce.Members)
-                .FirstOrDefaultAsync(ce => ce.Id == calendarEventId);
+            var calendarEvent = await _context.calendarEvents
+                .Find(ce => ce.Id == calendarEventId)
+                .FirstOrDefaultAsync();
 
             calendarEvent.Name.Should().Be(command.Name);
             calendarEvent.Location.Should().Be(command.Location);

@@ -4,13 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using CalendarAPIMongo.Application.CommandSide.Commands.EditCalendarEvent;
 using CalendarAPIMongo.Application.Exceptions;
-using CalendarAPIMongo.Domain.Entity;
+using CalendarAPIMongo.Domain.Models;
 using CalendarAPIMongo.Domain.Repositories;
 using CalendarAPIMongo.Infrastructure;
 using CalendarAPIMongo.Infrastructure.Repositories;
-using CalendarAPITests.TestUtils;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
+using Mongo2Go;
+using MongoDB.Driver;
 using Xunit;
 
 namespace CalendarAPITests.Application.CommandSide.Commands.EditCalendarEvent
@@ -18,15 +18,16 @@ namespace CalendarAPITests.Application.CommandSide.Commands.EditCalendarEvent
     public class EditCalendarEventCommandHandlerTests
     {
         private readonly ICalendarEventRepository _calendarEventRepository;
-        private readonly CalendarContext _context;
+        private readonly MongoDbContext _context;
 
         public EditCalendarEventCommandHandlerTests()
         {
-            var options = new DbContextOptionsBuilder<CalendarContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
-                .Options;
-            _context = new CalendarContext(options);
-            _calendarEventRepository = new CalendarCalendarEventRepository(_context);
+            var runner = MongoDbRunner.Start(singleNodeReplSet: true, singleNodeReplSetWaitTimeout: 10);
+            var server = new MongoClient(runner.ConnectionString);
+
+            var database = server.GetDatabase("inMemoryDatabase");
+            _context = new MongoDbContext(database);
+            _calendarEventRepository = new CalendarEventRepository(_context);
         }
 
         [Fact]
@@ -40,9 +41,7 @@ namespace CalendarAPITests.Application.CommandSide.Commands.EditCalendarEvent
             );
             calendarEvent.AddMember("Aleida");
             calendarEvent.AddMember("Vans Martin");
-            _context.Add(calendarEvent);
-            await _context.SaveChangesAsync();
-            _context.DetachAllEntities();
+            await _context.calendarEvents.InsertOneAsync(calendarEvent);
 
             var command = new EditCalendarEventCommand()
             {
@@ -56,9 +55,9 @@ namespace CalendarAPITests.Application.CommandSide.Commands.EditCalendarEvent
             var handler = new EditCalendarEventCommandHandler(_calendarEventRepository);
             await handler.Handle(command, CancellationToken.None);
 
-            var updatedCalendarEvent = await _context.CalendarEvents
-                .Include(ce => ce.Members)
-                .FirstOrDefaultAsync(ce => ce.Id == calendarEvent.Id);
+            var updatedCalendarEvent = await _context.calendarEvents
+                .Find(ce => ce.Id == calendarEvent.Id)
+                .FirstOrDefaultAsync();
 
             updatedCalendarEvent.Name.Should().Be(command.Name);
             updatedCalendarEvent.Location.Should().Be(command.Location);
@@ -82,7 +81,7 @@ namespace CalendarAPITests.Application.CommandSide.Commands.EditCalendarEvent
         {
             var command = new EditCalendarEventCommand()
             {
-                Id = 76890,
+                Id = "5e5c341ad9978660124045f6",
                 Name = "Football Challenge",
                 Time = DateTimeOffset.Now.AddDays(10).ToUnixTimeSeconds(),
                 Location = "Brussels, Belgian",
